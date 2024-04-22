@@ -24,8 +24,8 @@
 
 """
 
-from bsedata.exceptions import InvalidStockException
-from bsedata.helpers import COMMON_REQUEST_HEADERS
+from bsedata.exceptions import InvalidStockException, DetailsNotFoundException
+from bsedata.helpers import random_user_agent
 from datetime import datetime as dt
 from bs4 import BeautifulSoup as bs
 import requests
@@ -33,21 +33,28 @@ import requests
 
 def quote(scripCode: str) -> dict:
     baseurl = """https://m.bseindia.com/StockReach.aspx?scripcd="""
-    res = requests.get(baseurl + scripCode, headers=COMMON_REQUEST_HEADERS)
+    res = requests.get(baseurl + scripCode, headers=random_user_agent())
     c = res.content
     soup = bs(c, "lxml")
 
     res = {}
 
     for span in soup("span"):
-        updt_date = soup.find("span", id="strongDate").text.split("-")[1].strip()
+        strong_date_text = soup.find("span", id = "strongDate").text
+        if not strong_date_text:
+            # raise DetailsNotFoundException()
+            # RD - returning None in case of any exceptions
+            return None
+        updt_date = strong_date_text.split("-")[1].strip()
         updt_diff = dt.strptime(updt_date, "%d %b %y | %I:%M %p") - dt.now()
         if updt_diff.days < -7:
             error_text = ""
             error_text_element = soup.find("td", id="tdDispTxt")
             if error_text_element is not None:
                 error_text = error_text_element.text
-            raise InvalidStockException(status=error_text)
+            # raise InvalidStockException(status=error_text)
+            # RD - returning None in case of any exception
+            return None
         try:
             if span["class"][0] == "srcovalue":
                 try:

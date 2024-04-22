@@ -40,6 +40,21 @@ class InvalidStockException(Exception):
         super().__init__(self.status)
 
 
+class DetailsNotFoundException(Exception):
+    """
+    Exception raised for stocks where data not found while parsing
+
+    :param status: the status of the stock as mentioned on BSE website
+    """
+
+    def __init__(self, status: str = "Details not found for stock"):
+        if status == "":
+            self.status = "Details not found for stock"
+        else:
+            self.status = status
+        super().__init__(self.status)
+
+
 class BhavCopyNotFound(Exception):
     """
     Exception raised when the BhavCopy file is not found on BSE website.

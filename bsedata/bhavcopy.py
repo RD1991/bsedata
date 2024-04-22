@@ -6,7 +6,7 @@ import tempfile
 import datetime
 from zipfile import ZipFile
 from bsedata.exceptions import BhavCopyNotFound
-from bsedata.helpers import COMMON_REQUEST_HEADERS
+from bsedata.helpers import random_user_agent
 
 
 def loadBhavCopyData(statsDate: datetime.date) -> list:
@@ -14,7 +14,7 @@ def loadBhavCopyData(statsDate: datetime.date) -> list:
     zipfileName = f"EQ{statsDate.strftime('%d%m%y')}_CSV.ZIP"
     r = requests.get(
         f"https://www.bseindia.com/download/BhavCopy/Equity/{zipfileName}",
-        headers=COMMON_REQUEST_HEADERS,
+        headers=random_user_agent(),
     )
 
     if r.status_code != 200:

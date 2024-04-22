@@ -24,14 +24,14 @@
 
 """
 
-from bsedata.helpers import COMMON_REQUEST_HEADERS
+from bsedata.helpers import random_user_agent
 from bs4 import BeautifulSoup as bs
 import requests
 
 
 def getLosers() -> dict:
     baseurl = """https://m.bseindia.com"""
-    res = requests.get(baseurl, headers=COMMON_REQUEST_HEADERS)
+    res = requests.get(baseurl, headers=random_user_agent())
     c = res.content
     soup = bs(c, "lxml")
     for tag in soup("div"):

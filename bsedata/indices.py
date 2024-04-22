@@ -24,7 +24,7 @@
 
 """
 
-from bsedata.helpers import COMMON_REQUEST_HEADERS
+from bsedata.helpers import random_user_agent
 from bs4 import BeautifulSoup as bs
 import requests
 
@@ -64,7 +64,7 @@ money_market
         )
         return
     baseurl = """https://m.bseindia.com/IndicesView_New.aspx"""
-    res = requests.get(baseurl, headers=COMMON_REQUEST_HEADERS)
+    res = requests.get(baseurl, headers=random_user_agent())
     c = res.content
     soup = bs(c, "lxml")
     options = {
@@ -87,7 +87,7 @@ money_market
         except KeyError:
             continue
     options["ddl_Category"] = ddl_category
-    res = requests.post(url=baseurl, data=options, headers=COMMON_REQUEST_HEADERS)
+    res = requests.post(url=baseurl, data=options, headers=random_user_agent())
     c = res.content
     soup = bs(c, "lxml")
     index_list = []

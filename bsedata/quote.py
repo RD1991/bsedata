@@ -40,11 +40,14 @@ def quote(scripCode: str) -> dict:
     res = {}
 
     for span in soup("span"):
-        strong_date_text = soup.find("span", id = "strongDate").text
+        strong_date = soup.find("span", id = "strongDate")
+        if not strong_date:
+            return res
+        strong_date_text = strong_date.text
         if not strong_date_text:
             # raise DetailsNotFoundException()
             # RD - returning None in case of any exceptions
-            return None
+            return res
         updt_date = strong_date_text.split("-")[1].strip()
         updt_diff = dt.strptime(updt_date, "%d %b %y | %I:%M %p") - dt.now()
         if updt_diff.days < -7:
@@ -54,7 +57,7 @@ def quote(scripCode: str) -> dict:
                 error_text = error_text_element.text
             # raise InvalidStockException(status=error_text)
             # RD - returning None in case of any exception
-            return None
+            return res
         try:
             if span["class"][0] == "srcovalue":
                 try:

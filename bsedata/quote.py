@@ -33,7 +33,7 @@ import requests
 
 def quote(scripCode: str) -> dict:
     baseurl = """https://m.bseindia.com/StockReach.aspx?scripcd="""
-    res = requests.get(baseurl + scripCode, headers=random_user_agent(), timeout=5)
+    res = requests.get(baseurl + scripCode, headers=random_user_agent(), timeout=1)
     c = res.content
     soup = bs(c, "html.parser")
 
